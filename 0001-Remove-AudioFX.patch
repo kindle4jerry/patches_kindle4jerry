@@ -1,0 +1,18 @@
+From b2676f037e9593bd738a264566d3f8ef0ddec27d Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sun, 16 Feb 2020 00:10:55 +0800
+Subject: [PATCH] Remove AudioFX
+
+Change-Id: I9083b38871161adaf4d3b229063b87cc47153447
+---
+ Android.mk => Android.mk.bak | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Android.mk => Android.mk.bak (100%)
+
+diff --git a/Android.mk b/Android.mk.bak
+similarity index 100%
+rename from Android.mk
+rename to Android.mk.bak
+-- 
+2.17.1
+

@@ -1,0 +1,441 @@
+From 629aa0816c94872ed025bed79872abbdb1873fa5 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Thu, 6 Feb 2020 17:07:36 +0800
+Subject: [PATCH] ADD overlay for COR and HWI
+
+Change-Id: Ie9ca135d7c4d145f82f6b27b039e02cbbfd8afc2
+---
+ Huawei/hi3660/HWI/Android.mk                  |   8 +
+ Huawei/hi3660/HWI/AndroidManifest.xml         |  10 +
+ Huawei/hi3660/HWI/res/values/config.xml       |   4 +
+ Huawei/hi3660/HWI/res/xml/power_profile.xml   |  69 +++++++
+ Huawei/kirin970/COR/Android.mk                |   8 +
+ Huawei/kirin970/COR/AndroidManifest.xml       |  10 +
+ Huawei/kirin970/COR/res/values/values.xml     | 171 ++++++++++++++++++
+ Huawei/kirin970/COR/res/xml/power_profile.xml |  69 +++++++
+ overlay.mk                                    |   2 +
+ 9 files changed, 351 insertions(+)
+ create mode 100644 Huawei/hi3660/HWI/Android.mk
+ create mode 100644 Huawei/hi3660/HWI/AndroidManifest.xml
+ create mode 100644 Huawei/hi3660/HWI/res/values/config.xml
+ create mode 100644 Huawei/hi3660/HWI/res/xml/power_profile.xml
+ create mode 100644 Huawei/kirin970/COR/Android.mk
+ create mode 100644 Huawei/kirin970/COR/AndroidManifest.xml
+ create mode 100644 Huawei/kirin970/COR/res/values/values.xml
+ create mode 100644 Huawei/kirin970/COR/res/xml/power_profile.xml
+
+diff --git a/Huawei/hi3660/HWI/Android.mk b/Huawei/hi3660/HWI/Android.mk
+new file mode 100644
+index 0000000..b13c63d
+--- /dev/null
++++ b/Huawei/hi3660/HWI/Android.mk
+@@ -0,0 +1,8 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_PACKAGE_NAME := treble-overlay-huawei-HWI
++LOCAL_MODULE_PATH := $(TARGET_OUT)/overlay
++LOCAL_IS_RUNTIME_RESOURCE_OVERLAY := true
++LOCAL_PRIVATE_PLATFORM_APIS := true
++include $(BUILD_PACKAGE)
+diff --git a/Huawei/hi3660/HWI/AndroidManifest.xml b/Huawei/hi3660/HWI/AndroidManifest.xml
+new file mode 100644
+index 0000000..881664f
+--- /dev/null
++++ b/Huawei/hi3660/HWI/AndroidManifest.xml
+@@ -0,0 +1,10 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++        package="com.dil3mm4.huawei.HWI"
++        android:versionCode="1"
++        android:versionName="1.0">
++        <overlay android:targetPackage="android"
++	        android:requiredSystemPropertyName="ro.hw.oemName"
++		android:requiredSystemPropertyValue="+HWI*"
++		android:priority="38"
++		android:isStatic="true" />
++</manifest>
+diff --git a/Huawei/hi3660/HWI/res/values/config.xml b/Huawei/hi3660/HWI/res/values/config.xml
+new file mode 100644
+index 0000000..0b21807
+--- /dev/null
++++ b/Huawei/hi3660/HWI/res/values/config.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <integer name="config_screenBrightnessSettingMinimum">1</integer>
++</resources>
+diff --git a/Huawei/hi3660/HWI/res/xml/power_profile.xml b/Huawei/hi3660/HWI/res/xml/power_profile.xml
+new file mode 100644
+index 0000000..16a4905
+--- /dev/null
++++ b/Huawei/hi3660/HWI/res/xml/power_profile.xml
+@@ -0,0 +1,69 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++**
++** Copyright 2009, The Android Open Source Project
++**
++** Licensed under the Apache License, Version 2.0 (the "License")
++** you may not use this file except in compliance with the License.
++** You may obtain a copy of the License at
++**
++**     http://www.apache.org/licenses/LICENSE-2.0
++**
++** Unless required by applicable law or agreed to in writing, software
++** distributed under the License is distributed on an "AS IS" BASIS,
++** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++** See the License for the specific language governing permissions and
++** limitations under the License.
++*/
++-->
++<device name="Android">
++  <!-- All values are in mA except as noted -->
++  <item name="none">0</item>
++  <item name="screen.on">95</item> <!-- min brite -->
++  <item name="bluetooth.active">97</item>
++  <item name="bluetooth.on">0.6</item>
++  <item name="bluetooth.at">0.6</item> <!-- TBD -->
++  <item name="screen.full">365</item> <!-- backlight 16 leds -->
++  <item name="wifi.on">0.6</item>
++  <item name="wifi.active">128</item>
++  <item name="wifi.scan">146</item>
++  <item name="dsp.audio">43</item> <!-- k3v5 -->
++  <item name="dsp.video">176</item>
++  <item name="radio.active">190</item>
++  <item name="gps.on">70</item>
++  <item name="battery.capacity">3340</item> <!-- 3900mAh -->
++  <item name="radio.scanning">65</item> <!-- TBD -->
++  <!-- Current consumed by the radio at different signal strengths, when paging  -->
++  <array name="radio.on"> <!-- 1 entry per signal strength bin, TBD -->
++    <value>13.0</value>
++    <value>10.0</value>
++    <value>10.0</value>
++    <value>10.0</value>
++    <value>10.0</value>
++  </array>
++  <array name="cpu.speeds">
++    <value>533000</value> <!-- 533 MHz CPU speed -->
++    <value>999000</value> <!-- 999 MHz CPU speed -->
++    <value>1402000</value> <!-- 1.4 GHz CPU speed -->
++    <value>1709000</value><!-- 1.7 GHz CPU speed -->
++    <value>1844000</value><!-- 1.8 GHz CPU speed -->
++    <value>2112000</value><!-- 2.1 GHz CPU speed -->
++    <value>2362000</value><!-- 2.3 GHz CPU speed -->
++    <value>2612000</value><!-- 2.6 GHz CPU speed -->
++  </array>
++  <!-- Power consumption in suspend -->
++  <item name="cpu.idle">5</item> <!-- k3v5 -->
++  <!-- Power consumption due to wake lock held -->
++  <item name="cpu.awake">35</item> <!-- k3v5 -->
++  <!-- Power consumption at different speeds -->
++  <array name="cpu.active">
++    <value>30</value>
++    <value>72</value>
++    <value>133</value>
++    <value>201</value>
++    <value>250</value>
++    <value>990</value>
++    <value>1761</value>
++    <value>1948</value>
++  </array>
++</device>
+diff --git a/Huawei/kirin970/COR/Android.mk b/Huawei/kirin970/COR/Android.mk
+new file mode 100644
+index 0000000..e2729a8
+--- /dev/null
++++ b/Huawei/kirin970/COR/Android.mk
+@@ -0,0 +1,8 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_PACKAGE_NAME := treble-overlay-huawei-COR
++LOCAL_MODULE_PATH := $(TARGET_OUT)/overlay
++LOCAL_IS_RUNTIME_RESOURCE_OVERLAY := true
++LOCAL_PRIVATE_PLATFORM_APIS := true
++include $(BUILD_PACKAGE)
+diff --git a/Huawei/kirin970/COR/AndroidManifest.xml b/Huawei/kirin970/COR/AndroidManifest.xml
+new file mode 100644
+index 0000000..98d1f45
+--- /dev/null
++++ b/Huawei/kirin970/COR/AndroidManifest.xml
+@@ -0,0 +1,10 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++        package="me.phh.treble.overlay.huawei.COR"
++        android:versionCode="1"
++        android:versionName="1.0">
++        <overlay android:targetPackage="android"
++                android:requiredSystemPropertyName="ro.hw.oemName"
++                android:requiredSystemPropertyValue="+COR*"
++		android:priority="42"
++		android:isStatic="true" />
++</manifest>
+diff --git a/Huawei/kirin970/COR/res/values/values.xml b/Huawei/kirin970/COR/res/values/values.xml
+new file mode 100644
+index 0000000..d5cc4ba
+--- /dev/null
++++ b/Huawei/kirin970/COR/res/values/values.xml
+@@ -0,0 +1,171 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
++         The N entries of this array define N + 1 control points as follows:
++         (1-based arrays)
++
++         Point 1:            (0, value[1]):             lux <= 0
++         Point 2:     (level[1], value[2]):  0        < lux <= level[1]
++         Point 3:     (level[2], value[3]):  level[2] < lux <= level[3]
++         ...
++         Point N+1: (level[N], value[N+1]):  level[N] < lux
++
++         The control points must be strictly increasing.  Each control point
++         corresponds to an entry in the brightness backlight values arrays.
++         For example, if LUX == level[1] (first element of the levels array)
++         then the brightness will be determined by value[2] (second element
++         of the brightness values array).
++
++         Spline interpolation is used to determine the auto-brightness
++         backlight values for LUX levels between these control points.
++
++         Must be overridden in platform specific overlays -->
++    <integer-array name="config_autoBrightnessLevels">
++        <item>40</item>
++        <item>80</item>
++        <item>120</item>
++        <item>180</item>
++        <item>240</item>
++        <item>300</item>
++        <item>350</item>
++        <item>420</item>
++        <item>480</item>
++        <item>550</item>
++        <item>680</item>
++        <item>760</item>
++        <item>880</item>
++        <item>1050</item>
++        <item>1300</item>
++        <item>1600</item>
++        <item>2000</item>
++        <item>2400</item>
++        <item>2550</item>
++    </integer-array>
++
++    <!-- Array of output values for LCD backlight corresponding to the LUX values
++         in the config_autoBrightnessLevels array.  This array should have size one greater
++         than the size of the config_autoBrightnessLevels array.
++         The brightness values must be between 0 and 255 and be non-decreasing.
++         This must be overridden in platform specific overlays -->
++    <integer-array name="config_autoBrightnessLcdBacklightValues">
++        <item>6</item>   <!-- 0-1 -->
++        <item>10</item>   <!-- 1-40 -->
++        <item>20</item>   <!-- 40-100 -->
++        <item>30</item>   <!-- 100-325 -->
++        <item>40</item>   <!-- 325-600 -->
++        <item>50</item>  <!-- 600-1250 -->
++        <item>60</item>  <!-- 1250-2200 -->
++        <item>70</item>  <!-- 2200-4000 -->
++        <item>80</item>  <!-- 4000-10000 -->
++        <item>90</item>  <!-- 10000+ -->
++        <item>100</item>
++        <item>120</item>
++        <item>140</item>
++        <item>160</item>
++        <item>180</item>
++        <item>200</item>
++        <item>220</item>
++        <item>240</item>
++        <item>250</item>
++        <item>255</item>
++    </integer-array>
++	<!-- Boolean indicating if current platform supports BLE peripheral mode -->
++    <bool name="config_bluetooth_le_peripheral_mode_supported">true</bool>
++	
++    <!-- ComponentName of a dream to show whenever the system would otherwise have
++         gone to sleep.  When the PowerManager is asked to go to sleep, it will instead
++         try to start this dream if possible.  The dream should typically call startDozing()
++         to put the display into a low power state and allow the application processor
++         to be suspended.  When the dream ends, the system will go to sleep as usual.
++         Specify the component name or an empty string if none.
++         Note that doze dreams are not subject to the same start conditions as ordinary dreams.
++         Doze dreams will run whenever the power manager is in a dozing state. -->
++    <string name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
++
++    <!-- If true, the doze component is not started until after the screen has been
++         turned off and the screen off animation has been performed. -->
++    <bool name="config_dozeAfterScreenOff">true</bool>
++
++	<!-- Set this to true to enable the platform's auto-power-save modes like doze and
++         app standby.  These are not enabled by default because they require a standard
++         cloud-to-device messaging service for apps to interact correctly with the modes
++         (such as to be able to deliver an instant message to the device even when it is
++         dozing).  This should be enabled if you have such services and expect apps to
++         correctly use them when installed on your device.  Otherwise, keep this disabled
++         so that applications can still use their own mechanisms. -->
++    <bool name="config_enableAutoPowerModes">true</bool>
++	<!-- Power Management: Specifies whether to decouple the auto-suspend state of the
++         device from the display on/off state.
++         When false, autosuspend_disable() will be called before the display is turned on
++         and autosuspend_enable() will be called after the display is turned off.
++         This mode provides best compatibility for devices using legacy power management
++         features such as early suspend / late resume.
++         When true, autosuspend_display() and autosuspend_enable() will be called
++         independently of whether the display is being turned on or off.  This mode
++         enables the power manager to suspend the application processor while the
++         display is on.
++         This resource should be set to "true" when a doze component has been specified
++         to maximize power savings but not all devices support it.
++         Refer to autosuspend.h for details.
++    -->
++    <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
++    
++	<!-- Indicate whether to allow the device to suspend when the screen is off
++         due to the proximity sensor.  This resource should only be set to true
++         if the sensor HAL correctly handles the proximity sensor as a wake-up source.
++         Otherwise, the device may fail to wake out of suspend reliably.
++         The default is false. -->
++    <bool name="config_suspendWhenScreenOffDueToProximity">true</bool>
++    
++	<!-- Power Management: Specifies whether to decouple the interactive state of the
++         device from the display on/off state.
++         When false, setInteractive(..., true) will be called before the display is turned on
++         and setInteractive(..., false) will be called after the display is turned off.
++         This mode provides best compatibility for devices that expect the interactive
++         state to be tied to the display state.
++         When true, setInteractive(...) will be called independently of whether the display
++         is being turned on or off.  This mode enables the power manager to reduce
++         clocks and disable the touch controller while the display is on.
++         This resource should be set to "true" when a doze component has been specified
++         to maximize power savings but not all devices support it.
++         Refer to power.h for details.
++    -->
++    <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
++	
++
++    <!-- Screen brightness used to dim the screen while dozing in a very low power state.
++         May be less than the minimum allowed brightness setting
++         that can be set by the user. -->
++    <!--<integer name="config_screenBrightnessDoze">1</integer>-->
++
++
++
++    <integer name="config_autoBrightnessLightSensorRate">300</integer>
++    <bool name="config_automatic_brightness_available">true</bool>
++    <bool name="config_bluetooth_hfp_inband_ringing_support">true</bool>
++    <bool name="config_cellBroadcastAppLinks">true</bool>
++    <bool name="config_device_volte_available">true</bool>
++    <bool name="config_device_vt_available">true</bool>
++    <bool name="config_device_wfc_ims_available">true</bool>
++    <bool name="config_dynamic_bind_ims">true</bool>
++    <string name="config_ims_package">com.huawei.ims</string>
++    <integer name="config_mobile_mtu">1400</integer>
++    <integer name="config_screenBrightnessDark">1</integer>
++    <integer name="config_screenBrightnessDim">1</integer>
++    <integer name="config_screenBrightnessDoze">1</integer>
++    <integer name="config_screenBrightnessSettingDefault">20</integer>
++    <integer name="config_screenBrightnessSettingMinimum">1</integer>
++    <bool name="config_showNavigationBar">true</bool>
++    <bool name="config_wifi_dual_band_support">true</bool>
++    <bool name="skip_restoring_network_selection">true</bool>
++    <dimen name="navigation_bar_height">88px</dimen>
++    <dimen name="navigation_bar_height_landscape">88px</dimen>
++    <dimen name="navigation_bar_width">88px</dimen>
++    <dimen name="notification_header_padding_top">8.0dip</dimen>
++    <dimen name="notification_header_padding_bottom">8.0dip</dimen>
++    <!-- Height of the status bar in portrait -->
++    <dimen name="status_bar_height_portrait">88px</dimen>
++    <!-- Height of the status bar in landscape -->
++    <dimen name="status_bar_height_landscape">88px</dimen>
++	<string translatable="false" name="config_mainBuiltInDisplayCutout">M -220,0 L -220,88 L 220,88 L 220,0 Z</string>
++</resources>
+diff --git a/Huawei/kirin970/COR/res/xml/power_profile.xml b/Huawei/kirin970/COR/res/xml/power_profile.xml
+new file mode 100644
+index 0000000..b92768f
+--- /dev/null
++++ b/Huawei/kirin970/COR/res/xml/power_profile.xml
+@@ -0,0 +1,69 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++**
++** Copyright 2009, The Android Open Source Project
++**
++** Licensed under the Apache License, Version 2.0 (the "License")
++** you may not use this file except in compliance with the License.
++** You may obtain a copy of the License at
++**
++**     http://www.apache.org/licenses/LICENSE-2.0
++**
++** Unless required by applicable law or agreed to in writing, software
++** distributed under the License is distributed on an "AS IS" BASIS,
++** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++** See the License for the specific language governing permissions and
++** limitations under the License.
++*/
++-->
++<device name="Android">
++  <!-- All values are in mA except as noted -->
++  <item name="none">0</item>
++  <item name="screen.on">95</item> <!-- min brite -->
++  <item name="bluetooth.active">97</item>
++  <item name="bluetooth.on">0.6</item>
++  <item name="bluetooth.at">0.6</item> <!-- TBD -->
++  <item name="screen.full">365</item> <!-- backlight 16 leds -->
++  <item name="wifi.on">0.6</item>
++  <item name="wifi.active">128</item>
++  <item name="wifi.scan">146</item>
++  <item name="dsp.audio">43</item> <!-- k3v5 -->
++  <item name="dsp.video">176</item>
++  <item name="radio.active">190</item>
++  <item name="gps.on">70</item>
++  <item name="battery.capacity">3750</item> <!-- 3750mAh -->
++  <item name="radio.scanning">65</item> <!-- TBD -->
++  <!-- Current consumed by the radio at different signal strengths, when paging  -->
++  <array name="radio.on"> <!-- 1 entry per signal strength bin, TBD -->
++    <value>13.0</value>
++    <value>10.0</value>
++    <value>10.0</value>
++    <value>10.0</value>
++    <value>10.0</value>
++  </array>
++  <array name="cpu.speeds">
++    <value>533000</value> <!-- 533 MHz CPU speed -->
++    <value>999000</value> <!-- 999 MHz CPU speed -->
++    <value>1402000</value> <!-- 1.4 GHz CPU speed -->
++    <value>1709000</value><!-- 1.7 GHz CPU speed -->
++    <value>1844000</value><!-- 1.8 GHz CPU speed -->
++    <value>2112000</value><!-- 2.1 GHz CPU speed -->
++    <value>2362000</value><!-- 2.3 GHz CPU speed -->
++    <value>2612000</value><!-- 2.6 GHz CPU speed -->
++  </array>
++  <!-- Power consumption in suspend -->
++  <item name="cpu.idle">5</item> <!-- k3v5 -->
++  <!-- Power consumption due to wake lock held -->
++  <item name="cpu.awake">35</item> <!-- k3v5 -->
++  <!-- Power consumption at different speeds -->
++  <array name="cpu.active">
++    <value>30</value>
++    <value>72</value>
++    <value>133</value>
++    <value>201</value>
++    <value>250</value>
++    <value>990</value>
++    <value>1761</value>
++    <value>1948</value>
++  </array>
++</device>
+diff --git a/overlay.mk b/overlay.mk
+index 3931164..5c3d558 100644
+--- a/overlay.mk
++++ b/overlay.mk
+@@ -22,8 +22,10 @@ PRODUCT_PACKAGES += \
+ 	treble-overlay-huawei-BKL \
+ 	treble-overlay-huawei-BND \
+ 	treble-overlay-huawei-CLT \
++	treble-overlay-huawei-COR \
+ 	treble-overlay-huawei-DUK \
+ 	treble-overlay-huawei-EML \
++	treble-overlay-huawei-HMI \
+ 	treble-overlay-huawei-LLD \
+ 	treble-overlay-huawei-PRA \
+ 	treble-overlay-huawei-RNE \
+-- 
+2.17.1
+

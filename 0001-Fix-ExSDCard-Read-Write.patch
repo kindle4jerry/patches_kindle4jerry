@@ -1,0 +1,27 @@
+From 49037f952639b8ec41ee7d2afadb3864f7f4725c Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Mon, 10 Feb 2020 14:13:34 +0800
+Subject: [PATCH] Fix ExSDCard Read-Write
+
+Change-Id: I6341a3a163427dc2d3976e8def5a99710e300431
+---
+ core/java/android/os/storage/VolumeInfo.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/core/java/android/os/storage/VolumeInfo.java b/core/java/android/os/storage/VolumeInfo.java
+index 7699a052982..838a1c92701 100644
+--- a/core/java/android/os/storage/VolumeInfo.java
++++ b/core/java/android/os/storage/VolumeInfo.java
+@@ -352,7 +352,8 @@ public class VolumeInfo implements Parcelable {
+             return null;
+         } else if (type == TYPE_PUBLIC || type == TYPE_STUB) {
+             // TODO: plumb through cleaner path from vold
+-            return new File(path.replace("/storage/", "/mnt/media_rw/"));
++            //return new File(path.replace("/storage/", "/mnt/media_rw/"));
++            return new File(path.replace("/mnt/media_rw/", "/mnt/media_rw/"));
+         } else {
+             return getPathForUser(userId);
+         }
+-- 
+2.17.1
+

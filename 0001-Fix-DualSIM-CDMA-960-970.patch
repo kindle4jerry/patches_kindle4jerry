@@ -1,0 +1,38 @@
+From b19d7f8fc53d2354aa6c681e3313a872c598a22e Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Thu, 13 Feb 2020 19:31:52 +0800
+Subject: [PATCH] Fix DualSIM CDMA 960 970
+
+Change-Id: I3a98e6a78a94a44cb1752bb036581a801287cfab
+---
+ rw-system.sh | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/rw-system.sh b/rw-system.sh
+index ba0e841..a4246bd 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -516,12 +516,15 @@ if [ "$has_hostapd" = false ];then
+ fi
+ 
+ #Weird /odm/phone.prop Huawei stuff
+-if [ -f /odm/phone.prop ];then
+-    HW_PRODID="$(sed -nE 's/.*productid=([0-9x]*).*/\1/p' /proc/cmdline)"
+-    if [ -n "$HW_PRODID" ];then
+-        eval "$(awk 'BEGIN { a=0 }; /\[.*\].*/ { a=0 }; tolower($0) ~ /.*0x39606014.*/ { a=1 }; /.*=.*/ { if(a == 1) print $0 }' /odm/phone.prop |sed -nE 's/(.*)=(.*)/setprop \1 "\2";/p')"
++HW_PRODID="$(sed -nE 's/.*productid=([0-9xa-f]*).*/\1/p' /proc/cmdline)"
++[ -z "$HW_PRODID" ] && HW_PRODID="0x$(od -A none -t x1 /sys/firmware/devicetree/base/hisi,modem_id | sed s/' '//g)"
++for part in odm vendor;do
++    if [ -f /$part/phone.prop ];then
++        if [ -n "$HW_PRODID" ];then
++            eval "$(awk 'BEGIN { a=0 }; /\[.*\].*/ { a=0 }; tolower($0) ~ /.*'"$HW_PRODID"'.*/ { a=1 }; /.*=.*/ { if(a == 1) print $0 }' /$part/phone.prop |sed -nE 's/(.*)=(.*)/setprop \1 "\2";/p')"
++        fi
+     fi
+-fi
++done
+ 
+ # Fix sprd adf for surfaceflinger to start
+ # Somehow the names of the device nodes are incorrect on Android 10; fix them by mknod
+-- 
+2.17.1
+

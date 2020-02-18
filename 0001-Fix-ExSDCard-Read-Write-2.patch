@@ -1,0 +1,27 @@
+From 5b77465ce09d1a0ba653f6b480831dea080a7b06 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Mon, 10 Feb 2020 14:21:20 +0800
+Subject: [PATCH] Fix ExSDCard Read Write 2
+
+Change-Id: I599a1b118571a150aeeca5a37811cfd821eee03e
+---
+ model/PublicVolume.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/model/PublicVolume.cpp b/model/PublicVolume.cpp
+index 5308724..7f83e71 100644
+--- a/model/PublicVolume.cpp
++++ b/model/PublicVolume.cpp
+@@ -121,7 +121,8 @@ status_t PublicVolume::doMount() {
+ 
+     setInternalPath(mRawPath);
+     if (getMountFlags() & MountFlags::kVisible) {
+-        setPath(StringPrintf("/storage/%s", stableName.c_str()));
++        //setPath(StringPrintf("/storage/%s", stableName.c_str()));
++        setPath(StringPrintf("/mnt/media_rw/%s", stableName.c_str()));
+     } else {
+         setPath(mRawPath);
+     }
+-- 
+2.17.1
+

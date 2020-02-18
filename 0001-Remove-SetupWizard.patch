@@ -1,0 +1,18 @@
+From f0bb29cc6842f1b4eceeea9ad925e442fd40773e Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sat, 15 Feb 2020 23:51:12 +0800
+Subject: [PATCH] Remove SetupWizard
+
+Change-Id: I4c8ce2f493618f6f80c639700154fb843f9a2200
+---
+ Android.mk => Android.mk.bak | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Android.mk => Android.mk.bak (100%)
+
+diff --git a/Android.mk b/Android.mk.bak
+similarity index 100%
+rename from Android.mk
+rename to Android.mk.bak
+-- 
+2.17.1
+
