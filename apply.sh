@@ -38,4 +38,8 @@ git am $p_dir/0001-Remove-SetupWizard.patch
 cd $work_dir/package/apps/AudioFX
 git am $p_dir/0001-Remove-AudioFX.patch
 
+#修复V9声音
+cd $work_dir/device/phh/treble/
+git am $p_dir/0001-Fix-honor-V9-no-voice-add-sepolicy-file-contexts.patch
+
 
