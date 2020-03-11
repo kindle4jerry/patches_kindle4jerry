@@ -1,0 +1,22 @@
+From 38d8d7eabe9d6b2e62c5fe4f0113223e9cd6bfd8 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Thu, 12 Mar 2020 01:34:51 +0800
+Subject: [PATCH] Fix V9 Voice
+
+---
+ sepolicy/file_contexts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
+index 187a128..b5a6f6c 100644
+--- a/sepolicy/file_contexts
++++ b/sepolicy/file_contexts
+@@ -9,3 +9,5 @@
+ 
+ /sec_storage(/.*)?      u:object_r:teecd_data_file:s0
+ /dev/dsm                u:object_r:dmd_device:s0
++
++/dev/nxp_smartpa_dev                u:object_r:media_rw_data_file:s0
+-- 
+2.17.1
+

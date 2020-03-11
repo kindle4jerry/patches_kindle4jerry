@@ -27,8 +27,8 @@ git am $p_dir/0001-Fix-ExSDCard-Read-Write-2.patch
 #修复960，970双卡问题(CDMA依然玄学)
 #注意PHH有一个commit是修这个的，注意一下代码版本的时间,2020-01-14
 #https://github.com/phhusson/device_phh_treble/commit/21cbb9b4c447bc04b875676b64b254db84fb9fe5
-cd $work_dir/device/phh/treble
-git am $p_dir/0001-Fix-DualSIM-CDMA-960-970.patch
+#cd $work_dir/device/phh/treble
+#git am $p_dir/0001-Fix-DualSIM-CDMA-960-970.patch
 
 #暴力修复部分手机卡导致设置向导FC
 cd $work_dir/package/apps/SetupWizard
@@ -39,7 +39,10 @@ cd $work_dir/package/apps/AudioFX
 git am $p_dir/0001-Remove-AudioFX.patch
 
 #修复V9声音
-cd $work_dir/device/phh/treble/
-git am $p_dir/0001-Fix-honor-V9-no-voice-add-sepolicy-file-contexts.patch
+#cd $work_dir/device/phh/treble/
+#git am $p_dir/0001-Fix-honor-V9-no-voice-add-sepolicy-file-contexts.patch
 
+#修复V9声音v2
+cd $work_dir/device/phh/treble/
+git am $p_dir/0001-Fix-V9-Voice.patch
 
