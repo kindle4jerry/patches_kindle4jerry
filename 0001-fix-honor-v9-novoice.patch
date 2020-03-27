@@ -1,0 +1,36 @@
+From ea60fb097f32d599aa0ef79da64e81f2fdb9bba6 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sun, 1 Mar 2020 22:40:27 +0800
+Subject: [PATCH] fix honor v9 novoice
+
+---
+ rootdir/init.rc | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 9c239fa20..2b126eeaa 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -755,6 +755,10 @@ on boot
+ 
+     class_start core
+ 
++    # Fix honor v9 no voice
++    chmod 0660 /dev/nxp_smartpa_dev
++    chown media media /dev/nxp_smartpa_dev
++
+ on nonencrypted
+     class_start main
+     class_start late_start
+@@ -857,3 +861,8 @@ service flash_recovery /system/bin/install-recovery.sh
+ # update recovery if enabled
+ on property:persist.sys.recovery_update=true
+     start flash_recovery
++
++#fix honor v9 voice
++service aptouch /system/bin/true
++    disabled
++    oneshot
+-- 
+2.17.1
+

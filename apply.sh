@@ -38,11 +38,18 @@ git am $p_dir/0001-Remove-SetupWizard.patch
 cd $work_dir/package/apps/AudioFX
 git am $p_dir/0001-Remove-AudioFX.patch
 
-#修复V9声音
+#修复v9声音part1
+cd $work_dir/system/core
+git am $p_dir/0001-fix-honor-v9-novoice.patch
+
+#修复V9声音part2
 #cd $work_dir/device/phh/treble/
 #git am $p_dir/0001-Fix-honor-V9-no-voice-add-sepolicy-file-contexts.patch
 
-#修复V9声音v2
+#修复V9声音part2v2
 cd $work_dir/device/phh/treble/
 git am $p_dir/0001-Fix-V9-Voice.patch
 
+#加入免费ROM声明，加入恰饭二维码
+cd $work_dir/packages/apps/Settings/
+git am $p_dir/0001-add-eat-qrcode.patch
