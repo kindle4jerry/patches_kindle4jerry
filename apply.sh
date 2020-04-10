@@ -42,10 +42,6 @@ git am $p_dir/0001-Remove-AudioFX.patch
 cd $work_dir/system/core
 git am $p_dir/0001-fix-honor-v9-novoice.patch
 
-#修复V9声音part2
-#cd $work_dir/device/phh/treble/
-#git am $p_dir/0001-Fix-honor-V9-no-voice-add-sepolicy-file-contexts.patch
-
 #修复V9声音part2v2
 cd $work_dir/device/phh/treble/
 git am $p_dir/0001-Fix-V9-Voice.patch
