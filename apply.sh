@@ -55,3 +55,14 @@ cd $work_dir/frameworks/base
 git am $p_dir/0001-services-Support-brevent.patch
 #注意app需要集成到system app里面
 
+#修复p10等机型无指纹
+cd $work_dir/device/phh/treble
+git am $p_dir/0001-fix-huawei-phone-unkonw-fingerprint.patch
+
+#PEP编译，12是抄los的方案改写比较通用，3是pep专属error
+#修复PEP编译error主要是那个local module
+cd $work_dir/vendor/aosp
+git am $p_dir/0001-Log-privapp-permissions.patch
+git am $p_dir/0002-build-soong-disable-generated-kernel-headers.patch
+git am $p_dir/0003-fix-PEP-build-error.patch
+
