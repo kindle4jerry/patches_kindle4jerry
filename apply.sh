@@ -61,8 +61,18 @@ git am $p_dir/0001-fix-huawei-phone-unkonw-fingerprint.patch
 
 #PEP编译，12是抄los的方案改写比较通用，3是pep专属error
 #修复PEP编译error主要是那个local module
+#cd $work_dir/vendor/aosp
+#git am $p_dir/0001-Log-privapp-permissions.patch
+#git am $p_dir/0002-build-soong-disable-generated-kernel-headers.patch
+#git am $p_dir/0003-fix-PEP-build-error.patch
+
+#UI信号显示
+cd $work_dir/frameworks/base
+git am $p_dir/0001-UI-signal.patch
+
+#修复PEP编译error
 cd $work_dir/vendor/aosp
-git am $p_dir/0001-Log-privapp-permissions.patch
-git am $p_dir/0002-build-soong-disable-generated-kernel-headers.patch
-git am $p_dir/0003-fix-PEP-build-error.patch
+git am $p_dir/0001-Disable-generated_kernel_headers.patch
+git am $p_dir/0002-Log-privapp-permissions.patch
+git am $p_dir/0003-remove-NoCutoutOVerlay.patch
 
