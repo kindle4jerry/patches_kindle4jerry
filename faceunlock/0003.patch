@@ -1,0 +1,72 @@
+From 0d3718a52c92cea2adfd64a3635c309414b44e4f Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Date: Fri, 27 Mar 2020 22:48:17 -0300
+Subject: [PATCH] fwb: Guard some functions against face unlock
+
+Change-Id: I26d6f6d9ead884aff361236d2e5aa202d90704ba
+---
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index a43773d..7a8d516 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -172,13 +172,16 @@
+         @Override
+         public void onBiometricRunningStateChanged(boolean running,
+             BiometricSourceType biometricSourceType) {
+-            dispatchFodFingerprintRunningStateChanged(running);
++            if (biometricSourceType == BiometricSourceType.FINGERPRINT){
++                dispatchFodFingerprintRunningStateChanged(running);
++            }
+         }
+ 
+         @Override
+         public void onBiometricHelp(int msgId, String helpString,
+                 BiometricSourceType biometricSourceType) {
+-            if (msgId == -1){ // Auth error
++            if (biometricSourceType == BiometricSourceType.FINGERPRINT &&
++                    msgId == -1){ // Auth error
+                 hideCircle();
+                 mHandler.post(() -> mFODAnimation.hideFODanimation());
+             }
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java
+index 5806165..cdcaaa5 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java
+@@ -730,8 +730,10 @@
+                 @Override
+                 public void onBiometricRunningStateChanged(boolean running,
+                             BiometricSourceType biometricSourceType) {
+-                    mIsFingerprintRunning = running;
+-                    updateIndicationAreaPadding();
++                    if (biometricSourceType == BiometricSourceType.FINGERPRINT){
++                        mIsFingerprintRunning = running;
++                        updateIndicationAreaPadding();
++                    }
+                 }
+             };
+ 
+diff --git a/services/core/java/com/android/server/biometrics/BiometricServiceBase.java b/services/core/java/com/android/server/biometrics/BiometricServiceBase.java
+index 69a441d..8352d56 100644
+--- a/services/core/java/com/android/server/biometrics/BiometricServiceBase.java
++++ b/services/core/java/com/android/server/biometrics/BiometricServiceBase.java
+@@ -656,11 +656,16 @@
+         mPowerManager = mContext.getSystemService(PowerManager.class);
+         mUserManager = UserManager.get(mContext);
+         mMetricsLogger = new MetricsLogger();
+-        mCleanupUnusedFingerprints = mContext.getResources().getBoolean(
++        mCleanupUnusedFingerprints = statsModality() == BiometricsProtoEnums.MODALITY_FINGERPRINT &&
++                mContext.getResources().getBoolean(
+                 com.android.internal.R.bool.config_cleanupUnusedFingerprints);
+-        mNotifyClient = mContext.getResources().getBoolean(
++        mNotifyClient =
++                statsModality() == BiometricsProtoEnums.MODALITY_FINGERPRINT &&
++                mContext.getResources().getBoolean(
+                 com.android.internal.R.bool.config_notifyClientOnFingerprintCancelSuccess);
+-        mPostResetRunnableForAllClients = mContext.getResources().getBoolean(
++        mPostResetRunnableForAllClients =
++                statsModality() == BiometricsProtoEnums.MODALITY_FINGERPRINT &&
++                mContext.getResources().getBoolean(
+                 com.android.internal.R.bool.config_fingerprintPostResetRunnableForAllClients);
+     }
+ 

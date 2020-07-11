@@ -1,0 +1,441 @@
+From f79c7feffeb6ef17d6d4493f0a7b1fff08a62676 Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Date: Fri, 27 Mar 2020 16:53:03 -0300
+Subject: [PATCH] faceunlock: Import blobs
+
+* From motorola/foles_retail/foles:10/QPF30.130-15-7/38ece7:user/release-keys
+
+Change-Id: I331e0cbf4220c4dc037d764aa6ec839e62b85a09
+---
+
+diff --git a/Android.bp b/Android.bp
+new file mode 100644
+index 0000000..6b68d97
+--- /dev/null
++++ b/Android.bp
+@@ -0,0 +1,109 @@
++java_library {
++    name: "faceunlock_utils",
++    installable: true,
++
++    srcs: [
++        "src/**/*.java",
++        "src/**/*.aidl",
++    ],
++    aidl: {
++        local_include_dirs: ["src"],
++    },
++}
++
++android_app_import {
++    name: "FaceUnlockService",
++    apk: "prebuilt/priv-app/FaceUnlockService/FaceUnlockService.apk",
++    certificate: "platform",
++    dex_preopt: {
++        enabled: false,
++    },
++    privileged: true,
++    required: [
++        "FaceUnlockService-res",
++        "libFaceDetectCA",
++        "libmegface",
++        "libMegviiUnlock",
++        "libMegviiUnlock-jni-1.2",
++        "faceunlock_perm",
++        "privapp_whitelist_com.motorola.faceunlock",
++        "hiddenapi-whitelist-com.motorola.faceunlock"
++    ],
++}
++
++cc_prebuilt_library_shared {
++    name: "libFaceDetectCA",
++    strip: {
++        none: true,
++    },
++    target: {
++        android_arm64: {
++            srcs: ["prebuilt/lib64/libFaceDetectCA.so"],
++        },
++    },
++    compile_multilib: "64",
++    prefer: true,
++}
++
++cc_prebuilt_library_shared {
++    name: "libmegface",
++    strip: {
++        none: true,
++    },
++    target: {
++        android_arm64: {
++            srcs: ["prebuilt/lib64/libmegface.so"],
++        },
++    },
++    compile_multilib: "64",
++    prefer: true,
++}
++
++cc_prebuilt_library_shared {
++    name: "libMegviiUnlock",
++    strip: {
++        none: true,
++    },
++    target: {
++        android_arm64: {
++            srcs: ["prebuilt/lib64/libMegviiUnlock.so"],
++        },
++    },
++    compile_multilib: "64",
++    prefer: true,
++}
++
++cc_prebuilt_library_shared {
++    name: "libMegviiUnlock-jni-1.2",
++    strip: {
++        none: true,
++    },
++    target: {
++        android_arm64: {
++            srcs: ["prebuilt/lib64/libMegviiUnlock-jni-1.2.so"],
++        },
++    },
++    compile_multilib: "64",
++    prefer: true,
++}
++
++prebuilt_etc {
++    name: "faceunlock_perm",
++    sub_dir: "permissions",
++    src: "prebuilt/etc/permissions/android.hardware.biometrics.face.xml",
++    filename_from_src: true,
++}
++
++prebuilt_etc {
++    name: "privapp_whitelist_com.motorola.faceunlock",
++    sub_dir: "permissions",
++    src: "prebuilt/etc/permissions/com.motorola.faceunlock.xml",
++    filename_from_src: true,
++}
++
++prebuilt_etc {
++    name: "hiddenapi-whitelist-com.motorola.faceunlock",
++    sub_dir: "sysconfig",
++    src: "prebuilt/etc/sysconfig/hiddenapi-whitelist-com.motorola.faceunlock.xml",
++    filename_from_src: true,
++}
+\ No newline at end of file
+diff --git a/prebuilt/etc/permissions/android.hardware.biometrics.face.xml b/prebuilt/etc/permissions/android.hardware.biometrics.face.xml
+new file mode 100644
+index 0000000..7fa0bf9
+--- /dev/null
++++ b/prebuilt/etc/permissions/android.hardware.biometrics.face.xml
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2018 The Android Open Source Project
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++
++<!-- This is the standard set of features for a biometric face authentication sensor. -->
++<permissions>
++    <feature name="android.hardware.biometrics.face" />
++</permissions>
+diff --git a/prebuilt/etc/permissions/com.motorola.faceunlock.xml b/prebuilt/etc/permissions/com.motorola.faceunlock.xml
+new file mode 100644
+index 0000000..8eafafd
+--- /dev/null
++++ b/prebuilt/etc/permissions/com.motorola.faceunlock.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<permissions>
++    <privapp-permissions package="com.motorola.faceunlock">
++        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
++    </privapp-permissions>
++</permissions>
+diff --git a/prebuilt/etc/sysconfig/hiddenapi-whitelist-com.motorola.faceunlock.xml b/prebuilt/etc/sysconfig/hiddenapi-whitelist-com.motorola.faceunlock.xml
+new file mode 100644
+index 0000000..cb99666
+--- /dev/null
++++ b/prebuilt/etc/sysconfig/hiddenapi-whitelist-com.motorola.faceunlock.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<config>
++   <hidden-api-whitelisted-app package="com.motorola.faceunlock" />
++</config>
+diff --git a/prebuilt/lib64/libFaceDetectCA.so b/prebuilt/lib64/libFaceDetectCA.so
+new file mode 100644
+index 0000000..3ff5658
+--- /dev/null
++++ b/prebuilt/lib64/libFaceDetectCA.so
+Binary files differ
+diff --git a/prebuilt/lib64/libMegviiUnlock-jni-1.2.so b/prebuilt/lib64/libMegviiUnlock-jni-1.2.so
+new file mode 100644
+index 0000000..c30e471
+--- /dev/null
++++ b/prebuilt/lib64/libMegviiUnlock-jni-1.2.so
+Binary files differ
+diff --git a/prebuilt/lib64/libMegviiUnlock.so b/prebuilt/lib64/libMegviiUnlock.so
+new file mode 100644
+index 0000000..2cbb781
+--- /dev/null
++++ b/prebuilt/lib64/libMegviiUnlock.so
+Binary files differ
+diff --git a/prebuilt/lib64/libmegface.so b/prebuilt/lib64/libmegface.so
+new file mode 100644
+index 0000000..6ba4aa1
+--- /dev/null
++++ b/prebuilt/lib64/libmegface.so
+Binary files differ
+diff --git a/prebuilt/priv-app/FaceUnlockService/FaceUnlockService.apk b/prebuilt/priv-app/FaceUnlockService/FaceUnlockService.apk
+new file mode 100644
+index 0000000..86b244d
+--- /dev/null
++++ b/prebuilt/priv-app/FaceUnlockService/FaceUnlockService.apk
+Binary files differ
+diff --git a/res/Android.bp b/res/Android.bp
+new file mode 100644
+index 0000000..442f036
+--- /dev/null
++++ b/res/Android.bp
+@@ -0,0 +1,8 @@
++android_app {
++    name: "FaceUnlockService-res",
++    resource_dirs: ["res"],
++    dex_preopt: {
++        enabled: false,
++    },
++    installable: false
++}
+\ No newline at end of file
+diff --git a/res/AndroidManifest.xml b/res/AndroidManifest.xml
+new file mode 100644
+index 0000000..83ca303
+--- /dev/null
++++ b/res/AndroidManifest.xml
+@@ -0,0 +1,8 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.motorola.faceunlock.overlay"
++    android:versionCode="1"
++    android:versionName="1.0">
++    <overlay android:targetPackage="com.motorola.faceunlock" android:priority="1" android:isStatic="true" />
++
++    <application android:label="@string/app_name" android:hasCode="false"/>
++</manifest>
+\ No newline at end of file
+diff --git a/res/res/values/custom_strings.xml b/res/res/values/custom_strings.xml
+new file mode 100644
+index 0000000..41a4279
+--- /dev/null
++++ b/res/res/values/custom_strings.xml
+@@ -0,0 +1,76 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string name="app_name">Face unlock</string>
++    <string name="attr_blur">Face is too blurry</string>
++    <string name="attr_eye_close">Keep both eyes open</string>
++    <string name="attr_eye_occlusion">Only partial face detected</string>
++    <string name="attr_light_dark">Face needs more light</string>
++    <string name="attr_light_high">Face has too much light</string>
++    <string name="attr_light_shadow">Face has too many shadows</string>
++    <string name="attr_mouth_occlusion">Only partial face detected</string>
++    <string name="btn_done">Done</string>
++    <string name="btn_try">Try again</string>
++    <string name="confirm_lock_screen_btn_auth">Authenticate</string>
++    <string name="confirm_lock_screen_to_enable_face_summary">To activate Face unlock, enter your PIN, password, or pattern</string>
++    <string name="confirm_lock_screen_to_enable_face_title">Authentication required</string>
++    <string name="disabled_because_device_policy">Disabled by administrator</string>
++    <string name="disabled_because_no_backup_security">To use, first set a screen lock</string>
++    <string name="face_finish_header_2">Almost there</string>
++    <string name="face_instruct_anime_header">Lift, look, and unlock</string>
++    <string name="face_instruct_anime_next">got it</string>
++    <string name="face_intro_conten_first_point">Face matching is less secure than a pattern, PIN, or password</string>
++    <string name="face_intro_content_second_point">Someone who looks like you could unlock your phone</string>
++    <string name="face_intro_content_third_point">The data used to recognize your face is kept private on your phone</string>
++    <string name="face_intro_next">Next</string>
++    <string name="face_intro_remember">Remember:</string>
++    <string name="face_intro_summary">Unlock your phone by looking at it.</string>
++    <string name="face_intro_summary_for_lift">Unlock your phone by lifting and looking at it.</string>
++    <string name="face_intro_title">About face unlock</string>
++    <string name="face_redo_confirm_btn">Redo</string>
++    <string name="face_redo_warning_msg">Do you want to remove the existing face scan and create a new one?</string>
++    <string name="face_remove_confirm_btn">Disable</string>
++    <string name="face_remove_warning_msg">Do you want to remove all stored face scans and turn off face unlock?</string>
++    <string name="face_setup_summary">Set up face unlock</string>
++    <string name="face_setup_title">Unlock with a glance</string>
++    <string name="facelock_enabled_summary">Face matching enabled</string>
++    <string name="facelock_setup_notification_text">Set up face unlock</string>
++    <string name="facelock_setup_notification_title">Unlock with a glance</string>
++    <string name="finish_title">Finished</string>
++    <string name="moto_face_camera_content">Align your face</string>
++    <string name="moto_face_camera_content_tip">Make sure your face is centered below. Keep your face well lit and look directly at your phone.</string>
++    <string name="moto_face_next_change_later_tip">You can change this later in Security &amp; Location Settings</string>
++    <string name="moto_face_next_content">All set</string>
++    <string name="moto_face_next_content_tip">"Now that you've scanned your face, you can unlock your phone with just a glance."</string>
++    <string name="moto_face_try_content">Something went wrong</string>
++    <string name="moto_face_try_content_tip">"Face scan has failed. Be sure you're well lit and looking at the camera."</string>
++    <string name="policy_disabled_alert_msg">Face unlock has been disabled by the administrator.</string>
++    <string name="remove_lock_pattern_toast">Face scans have been removed</string>
++    <string name="security_settings_face_unlock_bypass_lock_screen_summary">Pressing power key will open the home screen or last used app once a face is matched</string>
++    <string name="security_settings_face_unlock_bypass_lock_screen_title">Bypass lock screen</string>
++    <string name="security_settings_face_unlock_disable_face_unlock_summary">Remove all stored face scans and turn off face unlock</string>
++    <string name="security_settings_face_unlock_disable_face_unlock_title">Disable face unlock</string>
++    <string name="security_settings_face_unlock_preference_title">Face unlock</string>
++    <string name="security_settings_face_unlock_redo_face_scan_summary">Remove existing face scan and create a new scan</string>
++    <string name="security_settings_face_unlock_redo_face_scan_title">Redo face scan</string>
++    <string name="title_activity_face_intro">Face unlock introduction</string>
++    <string name="txt_camera_success">Face Registered</string>
++    <string name="txt_camera_success_down">Look directly at camera</string>
++    <string name="txt_camera_success_left">Look directly at camera</string>
++    <string name="txt_camera_success_right">Look directly at camera</string>
++    <string name="txt_camera_success_top">Look directly at camera</string>
++    <string name="unlock_failed">Internal error</string>
++    <string name="unlock_failed_face_blur">Face is too blurry</string>
++    <string name="unlock_failed_face_large">Face is too close</string>
++    <string name="unlock_failed_face_multi">Too many faces detected</string>
++    <string name="unlock_failed_face_not_complete">Only partial face detected</string>
++    <string name="unlock_failed_face_not_found">Detecting</string>
++    <string name="unlock_failed_face_small">Face is too far away</string>
++    <string name="unlock_failed_offset_bottom">Look directly at camera</string>
++    <string name="unlock_failed_offset_left">Look directly at camera</string>
++    <string name="unlock_failed_offset_right">Look directly at camera</string>
++    <string name="unlock_failed_offset_top">Look directly at camera</string>
++    <string name="unlock_failed_quality">Only partial face detected</string>
++    <string name="unlock_failed_warning">Detecting</string>
++    <string name="upgrade_finish_summary">"Now you're ready to unlock your device with Face unlock"</string>
++    <string name="upgrade_finish_title">All right!</string>
++</resources>
+diff --git a/src/com/android/internal/util/custom/faceunlock/FaceUnlockUtils.java b/src/com/android/internal/util/custom/faceunlock/FaceUnlockUtils.java
+new file mode 100644
+index 0000000..75b9888
+--- /dev/null
++++ b/src/com/android/internal/util/custom/faceunlock/FaceUnlockUtils.java
+@@ -0,0 +1,24 @@
++/*
++* Copyright (C) 2020 The Pixel Experience Project
++*
++* Licensed under the Apache License, Version 2.0 (the "License");
++* you may not use this file except in compliance with the License.
++* You may obtain a copy of the License at
++*
++* http://www.apache.org/licenses/LICENSE-2.0
++*
++* Unless required by applicable law or agreed to in writing, software
++* distributed under the License is distributed on an "AS IS" BASIS,
++* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++* See the License for the specific language governing permissions and
++* limitations under the License.
++*/
++package com.android.internal.util.custom.faceunlock;
++
++import android.os.SystemProperties;
++
++public class FaceUnlockUtils {
++    public static boolean hasMotoFaceUnlock() {
++        return SystemProperties.getBoolean("ro.face.moto_unlock_service", false);
++    }
++}
+diff --git a/src/com/motorola/internal/app/IMotoFaceService.aidl b/src/com/motorola/internal/app/IMotoFaceService.aidl
+new file mode 100644
+index 0000000..1c34dad
+--- /dev/null
++++ b/src/com/motorola/internal/app/IMotoFaceService.aidl
+@@ -0,0 +1,48 @@
++/**
++ * Copyright (C) 2020 The PixelExperience Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.motorola.internal.app;
++
++import com.motorola.internal.app.IMotoFaceServiceReceiver;
++
++/** @hide */
++interface IMotoFaceService {
++    oneway void authenticate(long operationId);
++
++    oneway void cancel();
++
++    oneway void enroll(in byte[] cryptoToken, int timeout, in int[] disabledFeatures);
++
++    int enumerate();
++
++    long generateChallenge(int timeout);
++
++    int getAuthenticatorId();
++
++    boolean getFeature(int feature, int faceId);
++
++    int getFeatureCount();
++
++    oneway void remove(int biometricId);
++
++    oneway void resetLockout(in byte[] cryptoToken);
++
++    int revokeChallenge();
++
++    oneway void setCallback(in IMotoFaceServiceReceiver receiver);
++
++    oneway void setFeature(int feature, boolean enable, in byte[] token, int faceId);
++}
+\ No newline at end of file
+diff --git a/src/com/motorola/internal/app/IMotoFaceServiceReceiver.aidl b/src/com/motorola/internal/app/IMotoFaceServiceReceiver.aidl
+new file mode 100644
+index 0000000..3c43f4e
+--- /dev/null
++++ b/src/com/motorola/internal/app/IMotoFaceServiceReceiver.aidl
+@@ -0,0 +1,34 @@
++/**
++ * Copyright (C) 2020 The PixelExperience Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package com.motorola.internal.app;
++
++/** @hide */
++oneway interface IMotoFaceServiceReceiver {
++    void onEnrollResult(int faceId, int userId, int remaining);
++
++    void onAuthenticated(int faceId, int userId, in byte[] token);
++
++    void onAcquired(int userId, int acquiredInfo, int vendorCode);
++
++    void onError(int error, int vendorCode);
++
++    void onRemoved(in int[] faceIds, int userId);
++
++    void onEnumerate(in int[] faceIds, int userId);
++
++    void onLockoutChanged(long duration);
++}

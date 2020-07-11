@@ -1,0 +1,73 @@
+From 276223b0f3ca2265800ac4279aa39c871d2c21cd Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Date: Sat, 28 Mar 2020 12:51:07 -0300
+Subject: [PATCH] SystemUI: Allow listening for face only on pin/pass view
+
+Useful for devices with popup camera
+
+Change-Id: Ifba770dd1681858844d5d0290cbf385bfa47f841
+---
+
+diff --git a/packages/SystemUI/res/values/custom_config.xml b/packages/SystemUI/res/values/custom_config.xml
+index 717272f..ef94524 100644
+--- a/packages/SystemUI/res/values/custom_config.xml
++++ b/packages/SystemUI/res/values/custom_config.xml
+@@ -33,4 +33,7 @@
+     <!-- Whether to use the mask for the quicksettings icons-->
+     <bool name="config_useMaskForQs">true</bool>
+ 
++    <!-- Enable face auth only when swiping security view -->
++    <bool name="config_faceAuthOnlyOnSecurityView">false</bool>
++
+ </resources>
+diff --git a/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java b/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java
+index 54ff858..15cef6f 100644
+--- a/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java
++++ b/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java
+@@ -262,6 +262,7 @@
+     private boolean mLockIconPressed;
+ 
+     private final boolean mFingerprintWakeAndUnlock;
++    private final boolean mFaceAuthOnlyOnSecurityView;
+ 
+     /**
+      * Short delay before restarting biometric authentication after a successful try
+@@ -1503,6 +1504,8 @@
+         mStrongAuthTracker = new StrongAuthTracker(context, this::notifyStrongAuthStateChanged);
+         mFingerprintWakeAndUnlock = mContext.getResources().getBoolean(
+                 R.bool.config_fingerprintWakeAndUnlock);
++        mFaceAuthOnlyOnSecurityView = mContext.getResources().getBoolean(
++                R.bool.config_faceAuthOnlyOnSecurityView);
+ 
+         // Since device can't be un-provisioned, we only need to register a content observer
+         // to update mDeviceProvisioned when we are...
+@@ -1713,7 +1716,7 @@
+      * If face auth is allows to scan on this exact moment.
+      */
+     public boolean shouldListenForFace() {
+-        final boolean awakeKeyguard = mKeyguardIsVisible && mDeviceInteractive && !mGoingToSleep;
++        boolean awakeKeyguard = mKeyguardIsVisible && mDeviceInteractive && !mGoingToSleep;
+         final int user = getCurrentUser();
+         final int strongAuth = mStrongAuthTracker.getStrongAuthForUser(user);
+         final boolean isLockOutOrLockDown =
+@@ -1736,13 +1739,19 @@
+         boolean strongAuthAllowsScanning = (!isEncryptedOrTimedOut || canBypass && !mBouncer)
+                 && !isLockOutOrLockDown;
+ 
++        boolean unlockPossible = true;
++        if ((!mBouncer || !awakeKeyguard) && mFaceAuthOnlyOnSecurityView){
++            unlockPossible = false;
++        }
++
+         // Only listen if this KeyguardUpdateMonitor belongs to the primary user. There is an
+         // instance of KeyguardUpdateMonitor for each user but KeyguardUpdateMonitor is user-aware.
+         return (mBouncer || mAuthInterruptActive || awakeKeyguard || shouldListenForFaceAssistant())
+                 && !mSwitchingUser && !isFaceDisabled(user) && becauseCannotSkipBouncer
+                 && !mKeyguardGoingAway && mFaceSettingEnabledForUser.get(user) && !mLockIconPressed
+                 && strongAuthAllowsScanning && mIsPrimaryUser
+-                && !mSecureCameraLaunched;
++                && !mSecureCameraLaunched
++                && unlockPossible;
+     }
+ 
+     /**

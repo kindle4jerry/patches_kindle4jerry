@@ -1,0 +1,20 @@
+From bd4244251b9fed65cdd5fde7c755084fe71de9f5 Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Date: Fri, 27 Mar 2020 22:37:26 -0300
+Subject: [PATCH] [1/4] Port face unlock feature
+
+Change-Id: I74cdcc25066580e7e801d28a81990eb8eabca877
+---
+
+diff --git a/snippets/pixel.xml b/snippets/pixel.xml
+index 5610fbf..734121e 100644
+--- a/snippets/pixel.xml
++++ b/snippets/pixel.xml
+@@ -126,6 +126,7 @@
+ 
+   <!-- External repos -->
+   <project path="external/libhevc" name="external_libhevc" remote="pixel" />
++  <project path="external/motorola/faceunlock" name="external_motorola_faceunlock" remote="pixel" />
+   <project path="external/tinycompress" name="external_tinycompress" remote="pixel" />
+ 
+   <!-- System Repos -->

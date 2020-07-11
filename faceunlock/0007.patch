@@ -1,0 +1,35 @@
+From 2428a260dd754c7ec22c031ab2b5c5067bbee721 Mon Sep 17 00:00:00 2001
+From: jhenrique09 <jhenrique09.mcz@hotmail.com>
+Date: Fri, 27 Mar 2020 16:55:56 -0300
+Subject: [PATCH] [2/5] Port face unlock feature
+
+Build face unlock for arm64 devices
+
+Also add a flag to opt-out
+
+Change-Id: I9d4bb7174d28ca067665893a8096b3176a5aa7a6
+---
+
+diff --git a/config/common.mk b/config/common.mk
+index b3a439e..a3d98f8 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -138,6 +138,18 @@
+ PRODUCT_PACKAGES += \
+     Recorder
+ 
++# Face Unlock
++TARGET_FACE_UNLOCK_SUPPORTED := false
++ifeq ($(TARGET_GAPPS_ARCH),arm64)
++ifneq ($(TARGET_DISABLE_ALTERNATIVE_FACE_UNLOCK), true)
++PRODUCT_PACKAGES += \
++    FaceUnlockService
++TARGET_FACE_UNLOCK_SUPPORTED := true
++endif
++endif
++PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
++    ro.face.moto_unlock_service=$(TARGET_FACE_UNLOCK_SUPPORTED)
++
+ # Branding
+ include vendor/aosp/config/branding.mk
+ 
