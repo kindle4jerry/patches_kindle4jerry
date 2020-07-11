@@ -1,0 +1,74 @@
+From add0f61dd8adc681e42c935dd0e2c72784b48141 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Fri, 10 Jul 2020 02:53:12 +0800
+Subject: [PATCH] fix build error
+
+Change-Id: I85669b37e6c12ae258f92213b35c02cd1d794c92
+---
+ core/tasks/check_boot_jars/package_whitelist.txt |  2 ++
+ target/product/full_base_telephony.mk            |  5 -----
+ target/product/gsi_common.mk                     | 11 -----------
+ target/product/mainline.mk                       |  3 ---
+ 4 files changed, 2 insertions(+), 19 deletions(-)
+
+diff --git a/core/tasks/check_boot_jars/package_whitelist.txt b/core/tasks/check_boot_jars/package_whitelist.txt
+index 12b7114d9..7f1b22765 100644
+--- a/core/tasks/check_boot_jars/package_whitelist.txt
++++ b/core/tasks/check_boot_jars/package_whitelist.txt
+@@ -243,6 +243,8 @@ com\.google\.vr\.platform.*
+ org\.chromium\.arc
+ org\.chromium\.arc\..*
+ 
++vendor\.samsung\.hardware\.radio\.V1_2
++vendor\.mediatek\.hardware\.radio\.V2_0
+ ###################################################
+ # CodeAurora IMS functionality needed by frameworks/opt/telephony
+ # as part of "ims-ext-common"
+diff --git a/target/product/full_base_telephony.mk b/target/product/full_base_telephony.mk
+index dbaa336e8..fa4d6bf5b 100644
+--- a/target/product/full_base_telephony.mk
++++ b/target/product/full_base_telephony.mk
+@@ -30,10 +30,5 @@ endif
+ PRODUCT_COPY_FILES := \
+     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
+ 
+-ifeq ($(CUSTOM_BUILD),)
+-PRODUCT_COPY_FILES += \
+-    device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
+-endif
+-
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)
+diff --git a/target/product/gsi_common.mk b/target/product/gsi_common.mk
+index c70440ba5..e9b6002cc 100644
+--- a/target/product/gsi_common.mk
++++ b/target/product/gsi_common.mk
+@@ -79,14 +79,3 @@ PRODUCT_EXTRA_VNDK_VERSIONS := 28
+ PRODUCT_PACKAGES += \
+     WAPPushManager
+ 
+-# Telephony:
+-#   Provide a APN configuration to GSI product
+-ifeq ($(CUSTOM_BUILD),)
+-PRODUCT_COPY_FILES += \
+-    device/sample/etc/apns-full-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml
+-endif
+-
+-# NFC:
+-#   Provide a libnfc-nci.conf to GSI product
+-PRODUCT_COPY_FILES += \
+-    device/generic/common/nfc/libnfc-nci.conf:$(TARGET_COPY_OUT_PRODUCT)/etc/libnfc-nci.conf
+diff --git a/target/product/mainline.mk b/target/product/mainline.mk
+index 1ba0dcff7..5ba1b8efb 100644
+--- a/target/product/mainline.mk
++++ b/target/product/mainline.mk
+@@ -32,6 +32,3 @@ PRODUCT_PROPERTY_OVERRIDES += \
+     ro.com.android.dataroaming=true \
+ endif
+ 
+-ifeq ($(CUSTOM_BUILD),)
+-PRODUCT_COPY_FILES += device/sample/etc/apns-full-conf.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/apns-conf.xml
+-endif
+-- 
+2.17.1
+

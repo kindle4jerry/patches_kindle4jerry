@@ -70,5 +70,17 @@ git am $p_dir/0001-Disable-generated_kernel_headers.patch
 git am $p_dir/0002-Log-privapp-permissions.patch
 git am $p_dir/0003-remove-NoCutoutOVerlay.patch
 #手动去external/tinycompress Revert "tinycompress: Use generated kernel headers"
+cd $work_dir/device/phh/treble
+git am $p_dir/0001-add-pep.mk.patch
+git am $p_dir/0002-remove-apnsconf.patch
+#build .mk remove apns
+cd $work_dir/build/make
+git am $p_dir/0001-fix-build-error.patch
+#cryptfshw use device_kernel_headers
+cd $work_dir/hardware/custom/interfaces/cryptfshw/1.0
+git am $p_dir/0001-use-device_kernel_headers.patch
 
-
+#2 patch from AndyCGYan
+cd $work_dir/frameworks/base
+git am $p_dir/0001-Disable-vendor-mismatch-warning.patch
+git am $p_dir/0001-core-Add-support-for-MicroG.patch

@@ -1,0 +1,36 @@
+From ddc6d177e2ea2b0e603da9653e19233e897c4285 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Fri, 10 Jul 2020 02:58:45 +0800
+Subject: [PATCH 2/2] remove apnsconf
+
+---
+ base-pre.mk | 3 ---
+ base.mk     | 4 +---
+ 2 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/base-pre.mk b/base-pre.mk
+index 6a317e4..e69de29 100644
+--- a/base-pre.mk
++++ b/base-pre.mk
+@@ -1,3 +0,0 @@
+-#Use a more decent APN config
+-PRODUCT_COPY_FILES += \
+-	device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
+diff --git a/base.mk b/base.mk
+index 28325b4..510cbbb 100644
+--- a/base.mk
++++ b/base.mk
+@@ -7,9 +7,7 @@ PRODUCT_COPY_FILES := \
+ 	frameworks/native/data/etc/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
+ 	frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
+ 
+-#Use a more decent APN config
+-PRODUCT_COPY_FILES += \
+-	device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
++
+ 
+ BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/phh/treble/sepolicy
+ DEVICE_PACKAGE_OVERLAYS += device/phh/treble/overlay
+-- 
+2.17.1
+

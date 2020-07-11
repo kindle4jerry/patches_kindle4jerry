@@ -1,0 +1,26 @@
+From 5dfb8716251cc517d5741efdf69469eeb1fbbe30 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sat, 11 Jul 2020 14:50:28 +0800
+Subject: [PATCH] use device_kernel_headers
+
+Change-Id: I25f6beea90539aba406b4a4bb90277539c3aa777
+---
+ cryptfshw/1.0/Android.bp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cryptfshw/1.0/Android.bp b/cryptfshw/1.0/Android.bp
+index 46de15a..d622b32 100644
+--- a/cryptfshw/1.0/Android.bp
++++ b/cryptfshw/1.0/Android.bp
+@@ -15,7 +15,7 @@
+ cc_defaults {
+     name: "vendor.qti.hardware.cryptfshw@1.0_defaults",
+     defaults: ["hidl_defaults"],
+-    header_libs: ["generated_kernel_headers"],
++    header_libs: ["device_kernel_headers"],
+     owner: "qti",
+     relative_install_path: "hw",
+     srcs: [
+-- 
+2.17.1
+
