@@ -69,4 +69,6 @@ cd $work_dir/vendor/aosp
 git am $p_dir/0001-Disable-generated_kernel_headers.patch
 git am $p_dir/0002-Log-privapp-permissions.patch
 git am $p_dir/0003-remove-NoCutoutOVerlay.patch
+#手动去external/tinycompress Revert "tinycompress: Use generated kernel headers"
+
 
