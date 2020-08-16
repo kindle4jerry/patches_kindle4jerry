@@ -54,7 +54,7 @@ git am $p_dir/0001-add-eat-qrcode.patch
 #注意安卓10的这个黑域会有OOM问题
 #cd $work_dir/frameworks/base
 #git am $p_dir/0001-services-Support-brevent.patch
-#注意app需要集成到system app里面
+#注意Brevent.apk需要集成到system app里面
 
 #修复p10等机型无指纹
 cd $work_dir/device/phh/treble
