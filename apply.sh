@@ -55,6 +55,7 @@ git am $p_dir/0001-add-eat-qrcode.patch
 #cd $work_dir/frameworks/base
 #git am $p_dir/0001-services-Support-brevent.patch
 #注意Brevent.apk需要集成到system app里面
+#注意这个黑域补丁可能带来APP突然闪退以及意想不到的问题
 
 #修复p10等机型无指纹
 cd $work_dir/device/phh/treble
