@@ -1,0 +1,35 @@
+From 3273d9d6969bc4384ce29ae1e5678ad1bf85d2b6 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Fri, 16 Oct 2020 14:32:10 +0800
+Subject: [PATCH 2/2] brevent test 02
+
+Change-Id: I4916d574ee5051c4835898ce7aba7aa657b93dd5
+---
+ services/core/java/com/android/server/am/ProcessList.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/services/core/java/com/android/server/am/ProcessList.java b/services/core/java/com/android/server/am/ProcessList.java
+index 8faae487785..7331cae5007 100644
+--- a/services/core/java/com/android/server/am/ProcessList.java
++++ b/services/core/java/com/android/server/am/ProcessList.java
+@@ -1863,7 +1863,7 @@ public final class ProcessList {
+             return startProcessLocked$Pr(processName, info,
+                     knownToBeDead, intentFlags, hostingRecord,
+                     allowWhileBooting, isolated, isolatedUid, keepIfLarge,
+-                    abiOverride, entryPoint, entryPointArgs, crashHandler);
++                    abiOverride, entryPoint, entryPointArgs, crashHandler, zygotePolicyFlags);
+         } else {
+             return null;
+         }
+@@ -1871,7 +1871,7 @@ public final class ProcessList {
+     final ProcessRecord startProcessLocked$Pr(String processName, ApplicationInfo info,
+             boolean knownToBeDead, int intentFlags, HostingRecord hostingRecord,
+             boolean allowWhileBooting, boolean isolated, int isolatedUid, boolean keepIfLarge,
+-            String abiOverride, String entryPoint, String[] entryPointArgs, Runnable crashHandler) {
++            String abiOverride, String entryPoint, String[] entryPointArgs, Runnable crashHandler, int zygotePolicyFlags) {
+         long startTime = SystemClock.elapsedRealtime();
+         ProcessRecord app;
+         if (!isolated) {
+-- 
+2.17.1
+
