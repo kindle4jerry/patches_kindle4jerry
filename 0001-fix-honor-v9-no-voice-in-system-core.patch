@@ -1,0 +1,39 @@
+From b05739e0852aa721dfec8bd7a979ded005cbb5d7 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sun, 3 Jan 2021 11:17:27 +0800
+Subject: [PATCH] fix honor v9 no voice in system core
+
+Change-Id: I6de1b7965db731d77efc8268dd49d7963d98a2d7
+---
+ rootdir/init.rc | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index a9af0b094..a04bc1769 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -934,6 +934,9 @@ on boot
+     class_start hal
+ 
+     class_start core
++    # Fix honor v9 no voice
++    chmod 0660 /dev/nxp_smartpa_dev
++    chown media media /dev/nxp_smartpa_dev
+ 
+     # Requires keystore (currently a core service) to be ready first.
+     exec -- /system/bin/fsverity_init
+@@ -1043,6 +1046,11 @@ service console /system/bin/sh
+     seclabel u:r:shell:s0
+     setenv HOSTNAME console
+ 
++#fix honor v9 voice
++service aptouch /system/bin/true
++    disabled
++    oneshot
++
+ on property:ro.debuggable=1
+     # Give writes to anyone for the trace folder on debug builds.
+     # The folder is used to store method traces.
+-- 
+2.25.1
+

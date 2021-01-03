@@ -1,0 +1,25 @@
+From fe02fe807c70f0176b16992339be45533e4a1b00 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sun, 3 Jan 2021 11:20:24 +0800
+Subject: [PATCH] fix honor v9 no voice in device phh treble
+
+---
+ sepolicy/file_contexts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
+index 7ab5e91..d6d51af 100644
+--- a/sepolicy/file_contexts
++++ b/sepolicy/file_contexts
+@@ -6,6 +6,8 @@
+ /system/bin/phh-on-data.sh u:object_r:phhsu_exec:s0
+ /system/bin/asus-motor u:object_r:phhsu_exec:s0
+ 
++/dev/nxp_smartpa_dev                u:object_r:media_rw_data_file:s0
++
+ /bt_firmware(/.*)?      u:object_r:bt_firmware_file:s0
+ 
+ /sec_storage(/.*)?      u:object_r:teecd_data_file:s0
+-- 
+2.25.1
+

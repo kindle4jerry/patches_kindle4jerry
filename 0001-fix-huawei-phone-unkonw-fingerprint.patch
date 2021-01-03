@@ -1,0 +1,40 @@
+From a8b7eb3ddb352f0e0fb7d05b232b4ca8cf1e0dd8 Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Tue, 5 May 2020 22:12:15 +0800
+Subject: [PATCH] fix huawei phone unkonw fingerprint
+
+---
+ rw-system.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/rw-system.sh b/rw-system.sh
+index b550fe0..25b9a8a 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -562,7 +562,7 @@ if [ -c /dev/dsm ];then
+ 
+     mkdir -p /data/sec_storage_data
+     chown system:system /data/sec_storage_data
+-    chcon -R u:object_r:teecd_data_file:s0 /data/sec_storage_data
++    chcon -R u:object_r:teecd_data_file_system:s0 /data/sec_storage_data
+ 
+     if mount | grep -q " on /sec_storage " ; then
+         # /sec_storage is already mounted by the vendor, don't try to create and mount it
+@@ -570,12 +570,12 @@ if [ -c /dev/dsm ];then
+         # the fingerprint daemon (running as system) cannot access it.
+         chown -R system:system /sec_storage
+         chmod -R 0660 /sec_storage
+-        chcon -R u:object_r:teecd_data_file:s0 /sec_storage
++        chcon -R u:object_r:teecd_data_file_system:s0 /sec_storage
+     else
+         # No /sec_storage provided by vendor, mount /data/sec_storage_data to it
+         mount /data/sec_storage_data /sec_storage
+         chown system:system /sec_storage
+-        chcon u:object_r:teecd_data_file:s0 /sec_storage
++        chcon u:object_r:teecd_data_file_system:s0 /sec_storage
+     fi
+ fi
+ 
+-- 
+2.17.1
+

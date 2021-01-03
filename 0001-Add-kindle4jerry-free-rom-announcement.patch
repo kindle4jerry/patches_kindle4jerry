@@ -1,0 +1,29 @@
+From be481ca78f4564c2ffc6e2252bc8085c805b407a Mon Sep 17 00:00:00 2001
+From: kindle4jerry <kindle4jerry@gmail.com>
+Date: Sun, 3 Jan 2021 11:23:58 +0800
+Subject: [PATCH] Add kindle4jerry free rom announcement
+
+Change-Id: Ia2b4a5e61ddd6a3fb1a2d41b979047eceb9231f9
+---
+ res/xml/firmware_version.xml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/res/xml/firmware_version.xml b/res/xml/firmware_version.xml
+index fe8fd0deb0..251e50ddae 100644
+--- a/res/xml/firmware_version.xml
++++ b/res/xml/firmware_version.xml
+@@ -103,4 +103,11 @@
+         settings:enableCopying="true"
+         settings:controller="com.android.settings.deviceinfo.firmwareversion.SimpleBuildNumberPreferenceController"/>
+ 
++    <!-- Kindle4jerry -->
++    <Preference
++        android:key="kindle4jerry_warning"
++        android:title="kindle4jerry制作的免费ROM"
++        android:summary="如果你花钱买ROM，你应该去找卖家退款"
++        settings:enableCopying="true"/>
++
+ </PreferenceScreen>
+-- 
+2.25.1
+
